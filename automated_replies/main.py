@@ -3,7 +3,8 @@ import os
 import tweepy
 import numpy as np
 from grok_response import twitter_ai_response
-
+from datetime import datetime
+import duckdb
 
 def create_client():
     apikey = os.getenv("TwitterAPIKey")
@@ -80,6 +81,8 @@ def reply_to_tweet(tweet_id_reply,response):
     
     
 def main():
+    #connect to db to save tweets
+    conn = duckdb.connect('Tweets.duckdb')
     client = create_client()
     global client
     
@@ -87,4 +90,11 @@ def main():
     for index, item in enumerate(tweets):
         for key, value in item.items():
             response = twitter_ai_response(value)
-            reply_to_tweet(key,response)
+            try:
+                reply_to_tweet(key,response)
+                datetime = datetime.now()
+                conn.execute("INSERT INTO Tweet_Replies (datetime, tweet_id,tweet, reply) VALUES (?,?,?,?)",[datetime,key,value,response])
+                print("insert_successful")
+            except Exception as e:
+                print(f'Reply failed: {e}')
+    
