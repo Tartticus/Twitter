@@ -107,9 +107,9 @@ client = tweepy.Client(bearer_token=bearer_token)
 
 
 #Get username 
-username = "JohnBummit"
+username = "YourUsername"
 #Get tweet ID from tweet url. last digits after \
-tweet_id = '1902928424538091671'
+tweet_id = 'YourTweetID'
 
 def main():
     users = []
